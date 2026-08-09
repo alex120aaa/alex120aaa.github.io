@@ -15,12 +15,4 @@ main:
     url: "#"
     children:
       - title: "RESEARCH PROJECTS & ACTIVITIES"
-        url: /portfolio/
-      - title: "Blog Posts"
-        url: /year-archive/
-      - title: "CV"
-        url: /cv/
-      - title: "Talks"
-        url: /talks/
-      - title: "Site Map"
-        url: /sitemap/
+        url: /research-projects/

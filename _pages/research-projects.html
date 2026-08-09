@@ -1,0 +1,196 @@
+---
+layout: archive
+title: "Research Projects & Activities"
+permalink: /research-projects/
+author_profile: true
+---
+
+{% include base_path %}
+
+<div class="scut-publications-controls">
+  <div class="scut-sort-by">
+    <span>sort by:</span>
+    <select class="scut-sort-select" id="projSortSelect" onchange="sortProjects(this.value)">
+      <option value="date-desc">date (newest first)</option>
+      <option value="date-asc">date (oldest first)</option>
+      <option value="title">title (A-Z)</option>
+      <option value="title-desc">title (Z-A)</option>
+      <option value="type">type</option>
+    </select>
+  </div>
+  <div class="scut-search-results">
+    <input type="text" id="projectSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchProjects(this.value)">
+  </div>
+</div>
+
+<nav class="scut-pagination-nav scut-pagination-top" id="projPaginationTop"></nav>
+
+<div class="scut-publications-container" id="projectsContainer">
+  {% for post in site.projects reversed %}
+    {% include archive-single-project.html %}
+  {% endfor %}
+</div>
+
+<nav class="scut-pagination-nav scut-pagination-bottom" id="projPaginationBottom"></nav>
+
+<script>
+var projItemsPerPage = 25;
+var projCurrentPage = 1;
+var projFilteredItems = [];
+
+function initProjectsPagination() {
+  var container = document.getElementById('projectsContainer');
+  if (!container) return;
+  var items = Array.from(container.querySelectorAll('.scut-publication-card'));
+  projFilteredItems = items;
+  projCurrentPage = 1;
+  renderProjects();
+}
+
+function renderProjects() {
+  var container = document.getElementById('projectsContainer');
+  if (!container) return;
+  var items = projFilteredItems;
+  var total = items.length;
+  var totalPages = Math.max(1, Math.ceil(total / projItemsPerPage));
+  if (projCurrentPage > totalPages) projCurrentPage = totalPages;
+  if (projCurrentPage < 1) projCurrentPage = 1;
+
+  var start = (projCurrentPage - 1) * projItemsPerPage;
+  var end = Math.min(start + projItemsPerPage, total);
+
+  items.forEach(function(item, idx) {
+    item.style.display = (idx >= start && idx < end) ? '' : 'none';
+  });
+
+  var infoText = total > 0
+    ? 'Showing page ' + projCurrentPage + ', projects ' + (start + 1) + ' to ' + end + ' of ' + total
+    : 'No projects found';
+
+  renderProjectsPaginationNav('projPaginationTop', totalPages, infoText);
+  renderProjectsPaginationNav('projPaginationBottom', totalPages, infoText);
+}
+
+function renderProjectsPaginationNav(navId, totalPages, infoText) {
+  var nav = document.getElementById(navId);
+  if (!nav) return;
+  var html = '';
+
+  html += '<span class="scut-pagination-info">' + infoText + '</span>';
+  html += '<ul class="scut-pagination-pages">';
+
+  var maxVisible = 7;
+  var startPage, endPage;
+  if (totalPages <= maxVisible) {
+    startPage = 1;
+    endPage = totalPages;
+  } else {
+    startPage = Math.max(1, projCurrentPage - 2);
+    endPage = Math.min(totalPages, startPage + maxVisible - 3);
+    if (endPage - startPage < maxVisible - 3) {
+      startPage = Math.max(1, endPage - maxVisible + 3);
+    }
+  }
+
+  if (projCurrentPage > 1) {
+    html += '<li><button onclick="changeProjPage(' + (projCurrentPage - 1) + ')" aria-label="Previous page">&lsaquo;</button></li>';
+  }
+
+  if (startPage > 1) {
+    html += '<li><button onclick="changeProjPage(1)">1</button></li>';
+    if (startPage > 2) {
+      html += '<li class="scut-pagination-ellipsis">&hellip;</li>';
+    }
+  }
+
+  for (var p = startPage; p <= endPage; p++) {
+    if (p === projCurrentPage) {
+      html += '<li><button class="scut-pagination-current" disabled>' + p + '</button></li>';
+    } else {
+      html += '<li><button onclick="changeProjPage(' + p + ')">' + p + '</button></li>';
+    }
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      html += '<li class="scut-pagination-ellipsis">&hellip;</li>';
+    }
+    html += '<li><button onclick="changeProjPage(' + totalPages + ')">' + totalPages + '</button></li>';
+  }
+
+  if (projCurrentPage < totalPages) {
+    html += '<li><button onclick="changeProjPage(' + (projCurrentPage + 1) + ')" aria-label="Next page">&rsaquo;</button></li>';
+  }
+
+  html += '</ul>';
+  nav.innerHTML = html;
+}
+
+function changeProjPage(page) {
+  var total = projFilteredItems.length;
+  var totalPages = Math.max(1, Math.ceil(total / projItemsPerPage));
+  if (page < 1 || page > totalPages) return;
+  projCurrentPage = page;
+  renderProjects();
+  var top = document.getElementById('projPaginationTop');
+  if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function searchProjects(query) {
+  query = query.toLowerCase();
+  var container = document.getElementById('projectsContainer');
+  if (!container) return;
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  var filtered = [];
+  allItems.forEach(function(item) {
+    var title = item.querySelector('.scut-publication-title');
+    if (title) {
+      var text = title.textContent.toLowerCase();
+      if (text.includes(query)) filtered.push(item);
+    }
+  });
+  projFilteredItems = filtered;
+  projCurrentPage = 1;
+  renderProjects();
+}
+
+function sortProjects(sortBy) {
+  var container = document.getElementById('projectsContainer');
+  if (!container) return;
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  allItems.sort(function(a, b) {
+    if (sortBy === 'date-desc') {
+      return (b.getAttribute('data-date') || '').localeCompare(a.getAttribute('data-date') || '');
+    } else if (sortBy === 'date-asc') {
+      return (a.getAttribute('data-date') || '').localeCompare(b.getAttribute('data-date') || '');
+    } else if (sortBy === 'title') {
+      return (a.getAttribute('data-title') || '').toLowerCase().localeCompare((b.getAttribute('data-title') || '').toLowerCase());
+    } else if (sortBy === 'title-desc') {
+      return (b.getAttribute('data-title') || '').toLowerCase().localeCompare((a.getAttribute('data-title') || '').toLowerCase());
+    } else if (sortBy === 'type') {
+      var typeOrder = { 'RESEARCH PROJECT': 1, 'RESEARCH ACTIVITY': 2 };
+      var typeA = a.querySelector('.scut-publication-type');
+      var typeB = b.querySelector('.scut-publication-type');
+      var ta = typeA ? typeOrder[typeA.textContent.trim()] || 9 : 9;
+      var tb = typeB ? typeOrder[typeB.textContent.trim()] || 9 : 9;
+      if (ta !== tb) return ta - tb;
+      return (b.getAttribute('data-date') || '').localeCompare(a.getAttribute('data-date') || '');
+    }
+    return 0;
+  });
+  allItems.forEach(function(item) { container.appendChild(item); });
+  projFilteredItems = allItems.filter(function(item) {
+    var title = item.querySelector('.scut-publication-title');
+    if (!title) return false;
+    var search = document.getElementById('projectSearch');
+    if (!search || !search.value) return true;
+    return title.textContent.toLowerCase().includes(search.value.toLowerCase());
+  });
+  projCurrentPage = 1;
+  renderProjects();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initProjectsPagination();
+});
+</script>
