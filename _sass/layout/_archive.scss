@@ -5,11 +5,13 @@
 .archive {
   margin-bottom: 2em;
 
-  @include breakpoint($medium) {
-    @include span(12 of 12);
+  @media screen and (max-width: $sidebar-screen-min-width - 1px) {
+    width: 100%;
+    max-width: none;
+    float: none;
   }
 
-  @include breakpoint($large) {
+  @media screen and (min-width: $sidebar-screen-min-width) {
     @include span(10 of 12 last);
     @include prefix(0.5 of 12);
   }

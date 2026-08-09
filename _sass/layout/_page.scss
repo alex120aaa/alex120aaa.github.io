@@ -11,7 +11,7 @@
   animation: intro 0.3s both;
   animation-delay: 0.35s;
 
-  @media (min-width: $large) {
+  @media (min-width: $sidebar-screen-min-width) {
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
@@ -22,14 +22,20 @@
 }
 
 .scut-main {
-  @media (min-width: $large) {
+  @media (min-width: $sidebar-screen-min-width) {
     display: flex;
     gap: 32px;
   }
 }
 
 .page {
-  @include breakpoint($large) {
+  @media screen and (max-width: $sidebar-screen-min-width - 1px) {
+    width: 100%;
+    max-width: none;
+    float: none;
+  }
+
+  @media screen and (min-width: $sidebar-screen-min-width) {
     @include span(8 of 12 last);
     @include prefix(0 of 12);
   }
@@ -336,6 +342,85 @@
 }
 
 /* ==========================================================================
+   SCUT Pagination Navigation (Sydney-style top/bottom nav)
+   ========================================================================== */
+
+.scut-pagination-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+  margin: 8px 0;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.scut-pagination-top {
+  margin-bottom: 20px;
+}
+
+.scut-pagination-bottom {
+  margin-top: 32px;
+}
+
+.scut-pagination-nav .scut-pagination-info {
+  font-size: 13px;
+  color: #6b7280;
+  margin-left: 0;
+}
+
+.scut-pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+  }
+
+  button {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #004098;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #004098;
+      color: #ffffff;
+      border-color: #004098;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  .scut-pagination-current {
+    background-color: #004098;
+    color: #ffffff;
+    border-color: #004098;
+    font-weight: 600;
+  }
+
+  .scut-pagination-ellipsis {
+    padding: 0 4px;
+    color: #6b7280;
+    font-size: 13px;
+  }
+}
+
+/* ==========================================================================
    Page Hero
    ========================================================================== */
 
@@ -552,5 +637,15 @@
   .scut-profile-avatar img {
     width: 140px;
     height: 140px;
+  }
+
+  .scut-pagination-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .scut-pagination-pages {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }

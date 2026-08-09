@@ -11,9 +11,6 @@
     overflow-y: visible;
     position: static;
     padding-top: 0;
-  }
-
-  @include breakpoint($large) {
     @include span(4 of 12);
     opacity: 1;
   }
@@ -21,6 +18,12 @@
   @include breakpoint($x-large) {
     max-width: $sidebar-link-max-width;
     padding-right: 20px;
+  }
+
+  @media screen and (max-width: $sidebar-screen-min-width - 1px) {
+    width: 100%;
+    max-width: none;
+    float: none;
   }
 
   h2, h3, h4, h5, h6 {
@@ -40,8 +43,16 @@
 }
 
 .scut-sidebar {
-  position: sticky;
-  top: 140px;
+  @media screen and (min-width: $sidebar-screen-min-width) {
+    position: sticky;
+    top: 140px;
+  }
+
+  @media screen and (max-width: $sidebar-screen-min-width - 1px) {
+    position: static;
+    width: 100%;
+    max-width: none;
+  }
 }
 
 /* ==========================================================================

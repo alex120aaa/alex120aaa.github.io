@@ -10,10 +10,12 @@ author_profile: true
 <div class="scut-publications-controls">
   <div class="scut-sort-by">
     <span>sort by:</span>
-    <select class="scut-sort-select" onchange="sortPublications(this.value)">
+    <select class="scut-sort-select" id="pubSortSelect" onchange="sortPublications(this.value)">
       <option value="date-desc">date (newest first)</option>
       <option value="date-asc">date (oldest first)</option>
       <option value="title">title (A-Z)</option>
+      <option value="title-desc">title (Z-A)</option>
+      <option value="type">type</option>
     </select>
   </div>
   <div class="scut-search-results">
@@ -21,66 +23,174 @@ author_profile: true
   </div>
 </div>
 
-<div class="scut-publications-container">
-  {% if site.publication_category %}
-    {% for category in site.publication_category  %}
-      {% assign title_shown = false %}
-      {% for post in site.publications reversed %}
-        {% if post.category != category[0] %}
-          {% continue %}
-        {% endif %}
-        {% unless title_shown %}
-          <h2 class="scut-publication-category">{{ category[1].title }}</h2>
-          {% assign title_shown = true %}
-        {% endunless %}
-        {% include archive-single.html %}
-      {% endfor %}
-    {% endfor %}
-  {% else %}
-    {% for post in site.publications reversed %}
-      {% include archive-single.html %}
-    {% endfor %}
-  {% endif %}
+<nav class="scut-pagination-nav scut-pagination-top" id="pubPaginationTop"></nav>
+
+<div class="scut-publications-container" id="publicationsContainer">
+  {% for post in site.publications reversed %}
+    {% include archive-single.html %}
+  {% endfor %}
 </div>
 
-<div class="scut-pagination">
-  <span class="scut-pagination-info">Showing {{ site.publications.size }} publications</span>
-</div>
+<nav class="scut-pagination-nav scut-pagination-bottom" id="pubPaginationBottom"></nav>
 
 <script>
+var pubItemsPerPage = 25;
+var pubCurrentPage = 1;
+var pubFilteredItems = [];
+
+function initPublicationsPagination() {
+  var container = document.getElementById('publicationsContainer');
+  if (!container) return;
+  var items = Array.from(container.querySelectorAll('.scut-publication-card'));
+  pubFilteredItems = items;
+  pubCurrentPage = 1;
+  renderPublications();
+}
+
+function renderPublications() {
+  var container = document.getElementById('publicationsContainer');
+  if (!container) return;
+  var items = pubFilteredItems;
+  var total = items.length;
+  var totalPages = Math.max(1, Math.ceil(total / pubItemsPerPage));
+  if (pubCurrentPage > totalPages) pubCurrentPage = totalPages;
+  if (pubCurrentPage < 1) pubCurrentPage = 1;
+
+  var start = (pubCurrentPage - 1) * pubItemsPerPage;
+  var end = Math.min(start + pubItemsPerPage, total);
+
+  items.forEach(function(item, idx) {
+    item.style.display = (idx >= start && idx < end) ? '' : 'none';
+  });
+
+  var infoText = total > 0
+    ? 'Showing page ' + pubCurrentPage + ', research outputs ' + (start + 1) + ' to ' + end + ' of ' + total
+    : 'No research outputs found';
+
+  renderPaginationNav('pubPaginationTop', totalPages, infoText);
+  renderPaginationNav('pubPaginationBottom', totalPages, infoText);
+}
+
+function renderPaginationNav(navId, totalPages, infoText) {
+  var nav = document.getElementById(navId);
+  if (!nav) return;
+  var html = '';
+
+  html += '<span class="scut-pagination-info">' + infoText + '</span>';
+  html += '<ul class="scut-pagination-pages">';
+
+  var maxVisible = 7;
+  var startPage, endPage;
+  if (totalPages <= maxVisible) {
+    startPage = 1;
+    endPage = totalPages;
+  } else {
+    startPage = Math.max(1, pubCurrentPage - 2);
+    endPage = Math.min(totalPages, startPage + maxVisible - 3);
+    if (endPage - startPage < maxVisible - 3) {
+      startPage = Math.max(1, endPage - maxVisible + 3);
+    }
+  }
+
+  if (pubCurrentPage > 1) {
+    html += '<li><button onclick="changePubPage(' + (pubCurrentPage - 1) + ')" aria-label="Previous page">&lsaquo;</button></li>';
+  }
+
+  if (startPage > 1) {
+    html += '<li><button onclick="changePubPage(1)">1</button></li>';
+    if (startPage > 2) {
+      html += '<li class="scut-pagination-ellipsis">&hellip;</li>';
+    }
+  }
+
+  for (var p = startPage; p <= endPage; p++) {
+    if (p === pubCurrentPage) {
+      html += '<li><button class="scut-pagination-current" disabled>' + p + '</button></li>';
+    } else {
+      html += '<li><button onclick="changePubPage(' + p + ')">' + p + '</button></li>';
+    }
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      html += '<li class="scut-pagination-ellipsis">&hellip;</li>';
+    }
+    html += '<li><button onclick="changePubPage(' + totalPages + ')">' + totalPages + '</button></li>';
+  }
+
+  if (pubCurrentPage < totalPages) {
+    html += '<li><button onclick="changePubPage(' + (pubCurrentPage + 1) + ')" aria-label="Next page">&rsaquo;</button></li>';
+  }
+
+  html += '</ul>';
+  nav.innerHTML = html;
+}
+
+function changePubPage(page) {
+  var total = pubFilteredItems.length;
+  var totalPages = Math.max(1, Math.ceil(total / pubItemsPerPage));
+  if (page < 1 || page > totalPages) return;
+  pubCurrentPage = page;
+  renderPublications();
+  var top = document.getElementById('pubPaginationTop');
+  if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function searchPublications(query) {
   query = query.toLowerCase();
-  var items = document.querySelectorAll('.scut-publication-card');
-  items.forEach(function(item) {
+  var container = document.getElementById('publicationsContainer');
+  if (!container) return;
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  var filtered = [];
+  allItems.forEach(function(item) {
     var title = item.querySelector('.scut-publication-title');
     if (title) {
       var text = title.textContent.toLowerCase();
-      item.style.display = text.includes(query) ? '' : 'none';
+      if (text.includes(query)) filtered.push(item);
     }
   });
+  pubFilteredItems = filtered;
+  pubCurrentPage = 1;
+  renderPublications();
 }
+
 function sortPublications(sortBy) {
-  var container = document.querySelector('.scut-publications-container');
+  var container = document.getElementById('publicationsContainer');
   if (!container) return;
-  var items = Array.from(container.querySelectorAll('.scut-publication-card'));
-  items.sort(function(a, b) {
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  allItems.sort(function(a, b) {
     if (sortBy === 'date-desc') {
-      var dateA = a.getAttribute('data-date') || '';
-      var dateB = b.getAttribute('data-date') || '';
-      return dateB.localeCompare(dateA);
+      return (b.getAttribute('data-date') || '').localeCompare(a.getAttribute('data-date') || '');
     } else if (sortBy === 'date-asc') {
-      var dateA = a.getAttribute('data-date') || '';
-      var dateB = b.getAttribute('data-date') || '';
-      return dateA.localeCompare(dateB);
+      return (a.getAttribute('data-date') || '').localeCompare(b.getAttribute('data-date') || '');
     } else if (sortBy === 'title') {
-      var titleA = (a.getAttribute('data-title') || '').toLowerCase();
-      var titleB = (b.getAttribute('data-title') || '').toLowerCase();
-      return titleA.localeCompare(titleB);
+      return (a.getAttribute('data-title') || '').toLowerCase().localeCompare((b.getAttribute('data-title') || '').toLowerCase());
+    } else if (sortBy === 'title-desc') {
+      return (b.getAttribute('data-title') || '').toLowerCase().localeCompare((a.getAttribute('data-title') || '').toLowerCase());
+    } else if (sortBy === 'type') {
+      var typeOrder = { 'JOURNAL ARTICLE': 1, 'CONFERENCE PAPER': 2, 'BOOK': 3 };
+      var typeA = a.querySelector('.scut-publication-type');
+      var typeB = b.querySelector('.scut-publication-type');
+      var ta = typeA ? typeOrder[typeA.textContent.trim()] || 9 : 9;
+      var tb = typeB ? typeOrder[typeB.textContent.trim()] || 9 : 9;
+      if (ta !== tb) return ta - tb;
+      return (b.getAttribute('data-date') || '').localeCompare(a.getAttribute('data-date') || '');
     }
     return 0;
   });
-  items.forEach(function(item) {
-    container.appendChild(item);
+  allItems.forEach(function(item) { container.appendChild(item); });
+  pubFilteredItems = allItems.filter(function(item) {
+    var title = item.querySelector('.scut-publication-title');
+    if (!title) return false;
+    var search = document.getElementById('publicationSearch');
+    if (!search || !search.value) return true;
+    return title.textContent.toLowerCase().includes(search.value.toLowerCase());
   });
+  pubCurrentPage = 1;
+  renderPublications();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  initPublicationsPagination();
+});
 </script>
