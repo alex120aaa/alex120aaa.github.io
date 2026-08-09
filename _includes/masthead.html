@@ -25,9 +25,33 @@
             {% else %}
               {% assign domain = base_path %}
             {% endif %}
-            <li class="masthead__menu-item {% if page.url contains link.url %}selected{% endif %}">
-              <a href="{{ domain }}{{ link.url }}">{{ link.title }}</a>
-            </li>
+            {% assign is_selected = false %}
+            {% if page.url contains link.url and link.url != '#' %}
+              {% assign is_selected = true %}
+            {% endif %}
+            {% if link.children %}
+              <li class="masthead__menu-item masthead__menu-item-dropdown {% if is_selected %}selected{% endif %}">
+                <a href="{{ domain }}{{ link.url }}" class="scut-dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                  {{ link.title }}<span class="scut-dropdown-caret"></span>
+                </a>
+                <ul class="scut-dropdown-menu">
+                  {% for child in link.children %}
+                    {% if child.url contains 'http' %}
+                      {% assign child_domain = '' %}
+                    {% else %}
+                      {% assign child_domain = domain %}
+                    {% endif %}
+                    <li class="scut-dropdown-item">
+                      <a href="{{ child_domain }}{{ child.url }}">{{ child.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% else %}
+              <li class="masthead__menu-item {% if is_selected %}selected{% endif %}">
+                <a href="{{ domain }}{{ link.url }}">{{ link.title }}</a>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       </nav>
