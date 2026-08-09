@@ -1,0 +1,15 @@
+main:
+  - title: "About"
+    url: /about/
+
+  - title: "Research Outputs"
+    url: /publications/
+
+  - title: "Funded Research"
+    url: /portfolio/
+
+  - title: "Learning & Teaching"
+    url: /teaching/
+
+  - title: "More"
+    url: /year-archive/

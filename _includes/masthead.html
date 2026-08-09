@@ -1,0 +1,36 @@
+{% include base_path %}
+<div class="masthead scut-masthead">
+  <div class="scut-top-bar">
+    <div class="scut-top-bar-inner">
+      <a href="{{ base_path }}/" class="scut-logo">
+        <img src="{{ base_path }}/assets/images/scut-logo-white.svg" alt="华南理工大学" class="scut-logo-img">
+      </a>
+      <div class="scut-search">
+        <form action="#" method="get" class="scut-search-form">
+          <input type="text" placeholder="Search..." class="scut-search-input">
+          <button type="submit" class="scut-search-btn" aria-label="Search">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="scut-nav-bar">
+    <div class="scut-nav-inner">
+      <nav id="site-nav" class="scut-nav">
+        <ul class="visible-links">
+          {% for link in site.data.navigation.main %}
+            {% if link.url contains 'http' %}
+              {% assign domain = '' %}
+            {% else %}
+              {% assign domain = base_path %}
+            {% endif %}
+            <li class="masthead__menu-item {% if page.url contains link.url %}selected{% endif %}">
+              <a href="{{ domain }}{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

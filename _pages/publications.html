@@ -1,0 +1,86 @@
+---
+layout: archive
+title: "Research Outputs"
+permalink: /publications/
+author_profile: true
+---
+
+{% include base_path %}
+
+<div class="scut-publications-controls">
+  <div class="scut-sort-by">
+    <span>sort by:</span>
+    <select class="scut-sort-select" onchange="sortPublications(this.value)">
+      <option value="date-desc">date (newest first)</option>
+      <option value="date-asc">date (oldest first)</option>
+      <option value="title">title (A-Z)</option>
+    </select>
+  </div>
+  <div class="scut-search-results">
+    <input type="text" id="publicationSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchPublications(this.value)">
+  </div>
+</div>
+
+<div class="scut-publications-container">
+  {% if site.publication_category %}
+    {% for category in site.publication_category  %}
+      {% assign title_shown = false %}
+      {% for post in site.publications reversed %}
+        {% if post.category != category[0] %}
+          {% continue %}
+        {% endif %}
+        {% unless title_shown %}
+          <h2 class="scut-publication-category">{{ category[1].title }}</h2>
+          {% assign title_shown = true %}
+        {% endunless %}
+        {% include archive-single.html %}
+      {% endfor %}
+    {% endfor %}
+  {% else %}
+    {% for post in site.publications reversed %}
+      {% include archive-single.html %}
+    {% endfor %}
+  {% endif %}
+</div>
+
+<div class="scut-pagination">
+  <span class="scut-pagination-info">Showing {{ site.publications.size }} publications</span>
+</div>
+
+<script>
+function searchPublications(query) {
+  query = query.toLowerCase();
+  var items = document.querySelectorAll('.scut-publication-card');
+  items.forEach(function(item) {
+    var title = item.querySelector('.scut-publication-title');
+    if (title) {
+      var text = title.textContent.toLowerCase();
+      item.style.display = text.includes(query) ? '' : 'none';
+    }
+  });
+}
+function sortPublications(sortBy) {
+  var container = document.querySelector('.scut-publications-container');
+  if (!container) return;
+  var items = Array.from(container.querySelectorAll('.scut-publication-card'));
+  items.sort(function(a, b) {
+    if (sortBy === 'date-desc') {
+      var dateA = a.getAttribute('data-date') || '';
+      var dateB = b.getAttribute('data-date') || '';
+      return dateB.localeCompare(dateA);
+    } else if (sortBy === 'date-asc') {
+      var dateA = a.getAttribute('data-date') || '';
+      var dateB = b.getAttribute('data-date') || '';
+      return dateA.localeCompare(dateB);
+    } else if (sortBy === 'title') {
+      var titleA = (a.getAttribute('data-title') || '').toLowerCase();
+      var titleB = (b.getAttribute('data-title') || '').toLowerCase();
+      return titleA.localeCompare(titleB);
+    }
+    return 0;
+  });
+  items.forEach(function(item) {
+    container.appendChild(item);
+  });
+}
+</script>

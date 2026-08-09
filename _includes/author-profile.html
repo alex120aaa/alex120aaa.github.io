@@ -1,0 +1,110 @@
+{% include base_path %}
+
+{% if page.author and site.data.authors[page.author] %}
+  {% assign author = site.data.authors[page.author] %}{% else %}{% assign author = site.author %}
+{% endif %}
+
+<div itemscope itemtype="http://schema.org/Person" class="scut-profile">
+
+  <div class="scut-profile-avatar">
+    {% if author.avatar contains "://" %}
+    	<img src="{{ author.avatar }}" alt="{{ author.name }}" fetchpriority="high" />
+    {% else %}
+    	<img src="{{ author.avatar | prepend: "/images/" | prepend: base_path }}" alt="{{ author.name }}" fetchpriority="high" />
+    {% endif %}
+  </div>
+
+  <div class="scut-profile-info">
+    {% if author.bio %}<p class="scut-profile-bio">{{ author.bio }}</p>{% endif %}
+    <h1 class="scut-profile-name">{{ author.name }}</h1>
+  </div>
+
+  <div class="scut-profile-details">
+    {% if author.orcid %}
+    <div class="scut-profile-orcid">
+      <img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" alt="ORCID" width="16" height="16">
+      <a href="{{ author.orcid }}" target="_blank" rel="noopener">ORCID iD</a>
+    </div>
+    {% endif %}
+
+    {% if author.employer %}
+    <div class="scut-profile-item">
+      <i class="fas fa-building-columns"></i>
+      <span>{{ author.employer }}</span>
+    </div>
+    {% endif %}
+
+    {% if author.location %}
+    <div class="scut-profile-item">
+      <i class="fas fa-location-dot"></i>
+      <span>{{ author.location }}</span>
+    </div>
+    {% endif %}
+
+    {% if author.email %}
+    <div class="scut-profile-item">
+      <i class="fas fa-envelope"></i>
+      <a href="mailto:{{ author.email }}">{{ author.email }}</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="scut-profile-links">
+    {% if author.uri %}
+    <div class="scut-profile-link-item">
+      <i class="fas fa-globe"></i>
+      <a href="{{ author.uri }}">Personal Website</a>
+    </div>
+    {% endif %}
+
+    {% if author.googlescholar %}
+    <div class="scut-profile-link-item">
+      <i class="ai ai-google-scholar"></i>
+      <a href="{{ author.googlescholar }}">Google Scholar</a>
+    </div>
+    {% endif %}
+
+    {% if author.researchgate %}
+    <div class="scut-profile-link-item">
+      <i class="fab fa-researchgate"></i>
+      <a href="{{ author.researchgate }}">ResearchGate</a>
+    </div>
+    {% endif %}
+
+    {% if author.github %}
+    <div class="scut-profile-link-item">
+      <i class="fab fa-github"></i>
+      <a href="https://github.com/{{ author.github }}">GitHub</a>
+    </div>
+    {% endif %}
+
+    {% if author.linkedin %}
+    <div class="scut-profile-link-item">
+      <i class="fab fa-linkedin"></i>
+      <a href="https://www.linkedin.com/in/{{ author.linkedin }}">LinkedIn</a>
+    </div>
+    {% endif %}
+
+    {% if author.semantic %}
+    <div class="scut-profile-link-item">
+      <i class="ai ai-semantic-scholar"></i>
+      <a href="{{ author.semantic }}">Semantic Scholar</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="scut-profile-social">
+    {% if author.twitter %}
+    <a href="https://twitter.com/{{ author.twitter }}" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+    {% endif %}
+    {% if author.facebook %}
+    <a href="https://www.facebook.com/{{ author.facebook }}" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+    {% endif %}
+    {% if author.instagram %}
+    <a href="https://instagram.com/{{ author.instagram }}" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    {% endif %}
+    {% if author.youtube %}
+    <a href="https://www.youtube.com/@{{ author.youtube }}" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+    {% endif %}
+  </div>
+</div>
