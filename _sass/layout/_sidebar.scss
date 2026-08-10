@@ -46,6 +46,10 @@
   @media screen and (min-width: $sidebar-screen-min-width) {
     position: sticky;
     top: 140px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px 20px;
   }
 
   @media screen and (max-width: $sidebar-screen-min-width - 1px) {
@@ -60,7 +64,7 @@
    ========================================================================== */
 
 .scut-profile {
-  background: #ffffff;
+  background: transparent;
   border-radius: 8px;
   padding: 0;
   overflow: hidden;

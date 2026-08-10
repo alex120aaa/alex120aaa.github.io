@@ -8,8 +8,10 @@
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 24px;
+  padding-bottom: 32px;
   animation: intro 0.3s both;
   animation-delay: 0.35s;
+  background-color: #f3f4f6;
 
   @media (min-width: $sidebar-screen-min-width) {
     max-width: 1280px;
@@ -54,6 +56,10 @@
 .scut-page {
   flex: 1;
   min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 28px 32px;
 }
 
 .page__title {
@@ -106,6 +112,10 @@
 .scut-archive {
   flex: 1;
   min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 28px 32px;
 }
 
 .scut-archive-title {
@@ -613,6 +623,12 @@
 
   .scut-sidebar {
     position: static;
+    padding: 20px 16px;
+  }
+
+  .scut-archive,
+  .scut-page {
+    padding: 20px 16px;
   }
 
   .scut-publications-controls {
