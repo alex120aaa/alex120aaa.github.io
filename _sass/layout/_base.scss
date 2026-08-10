@@ -12,12 +12,18 @@ body {
   color: var(--global-text-color);
   background-color: var(--global-bg-color);
   margin: 0;
-  padding: $masthead-height 0 0;
+  /* No top padding by default (mobile: header scrolls with page).
+     Desktop restores the padding to compensate for the fixed masthead. */
+  padding: 0;
   padding-bottom: 3em;
   font-family: $global-font-family;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @media (min-width: 1024px) {
+    padding-top: $masthead-height;
+  }
 
   &.overflow--hidden {
     overflow: hidden;

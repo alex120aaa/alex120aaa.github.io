@@ -7,6 +7,12 @@
   top: 0;
   width: 100%;
   z-index: 20;
+
+  /* On mobile, don't fix the header — let it scroll with the page
+     so it doesn't squeeze the visible content area. */
+  @media (max-width: 1023px) {
+    position: static;
+  }
 }
 
 .scut-masthead {
