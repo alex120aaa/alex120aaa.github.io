@@ -1,37 +1,51 @@
 ---
 layout: archive
-title: "Portfolio"
 permalink: /portfolio/
 author_profile: true
 ---
 
 {% include base_path %}
 
-<div class="scut-publications-controls">
-  <div class="scut-sort-by">
-    <span>sort by:</span>
-    <select class="scut-sort-select" onchange="sortPortfolio(this.value)">
-      <option value="date-desc">date (newest first)</option>
-      <option value="date-asc">date (oldest first)</option>
-      <option value="title">title (A-Z)</option>
-    </select>
-  </div>
-  <div class="scut-search-results">
-    <input type="text" id="portfolioSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchPortfolio(this.value)">
-  </div>
-</div>
+<div class="scut-info-boxes">
 
-<div class="scut-publications-container" id="portfolioContainer">
-  {% for post in site.portfolio %}
-    {% include archive-single.html %}
-  {% endfor %}
-</div>
+  <!-- RESEARCH INTERESTS -->
+  <section class="scut-info-box">
+    <h2 class="scut-info-box-title">RESEARCH INTERESTS</h2>
+    <div class="scut-info-box-content">
+      <p>Dr. Wu's research interests encompass a broad range of topics in multimedia computing, including multimedia information retrieval, multimedia content understanding (e.g., human action recognition), and multimedia content creation. Her work also extends to human-centred multimedia computing, remote sensing, and inter-disciplinary applications in various domains such as agriculture, earth observation, environment, biology, health, and medicine.</p>
+    </div>
+  </section>
 
-<div class="scut-pagination">
-  <span class="scut-pagination-prev" id="portfolioPrev" onclick="changePortfolioPage(-1)">Previous</span>
-  <span class="scut-pagination-page" id="portfolioPageNum">1</span>
-  <span class="scut-pagination-next" id="portfolioNext" onclick="changePortfolioPage(1)">Next</span>
-  <span class="scut-pagination-info" id="portfolioInfo"></span>
+  <!-- FUNDED RESEARCH -->
+  <section class="scut-info-box">
+    <h2 class="scut-info-box-title">FUNDED RESEARCH</h2>
+    <div class="scut-info-box-content">
+
+      <div class="scut-publications-controls">
+        <div class="scut-sort-by">
+          <span>sort by:</span>
+          <select class="scut-sort-select" onchange="sortPortfolio(this.value)">
+            <option value="date-desc">date (newest first)</option>
+            <option value="date-asc">date (oldest first)</option>
+            <option value="title">title (A-Z)</option>
+          </select>
+        </div>
+        <div class="scut-search-results">
+          <input type="text" id="portfolioSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchPortfolio(this.value)">
+        </div>
+      </div>
+
+      <div class="scut-publications-container" id="portfolioContainer">
+        {% for post in site.portfolio %}
+          {% include archive-single.html %}
+        {% endfor %}
+      </div>
+
+      <nav class="scut-pagination-nav scut-pagination-bottom" id="portfolioPaginationBottom"></nav>
+
+    </div>
+  </section>
+
 </div>
 
 <script>
@@ -63,21 +77,66 @@ function renderPortfolio() {
     item.style.display = (idx >= start && idx < end) ? '' : 'none';
   });
 
-  var info = document.getElementById('portfolioInfo');
-  var pageNum = document.getElementById('portfolioPageNum');
-  var prev = document.getElementById('portfolioPrev');
-  var next = document.getElementById('portfolioNext');
+  var infoText = total > 0
+    ? 'Showing page ' + portfolioCurrentPage + ', ' + (start + 1) + '-' + end + ' of ' + total
+    : 'No funded research found';
 
-  if (info) info.textContent = total > 0 ? (start + 1) + '-' + end + ' out of ' + total : '0 out of 0';
-  if (pageNum) pageNum.textContent = portfolioCurrentPage;
-  if (prev) {
-    prev.style.visibility = portfolioCurrentPage <= 1 ? 'hidden' : '';
-    prev.style.cursor = portfolioCurrentPage <= 1 ? 'default' : 'pointer';
+  renderPortfolioPaginationNav('portfolioPaginationBottom', totalPages, infoText);
+}
+
+function renderPortfolioPaginationNav(navId, totalPages, infoText) {
+  var nav = document.getElementById(navId);
+  if (!nav) return;
+  var html = '';
+
+  html += '<span class="scut-pagination-info">' + infoText + '</span>';
+  html += '<ul class="scut-pagination-pages">';
+
+  var maxVisible = 7;
+  var startPage, endPage;
+  if (totalPages <= maxVisible) {
+    startPage = 1;
+    endPage = totalPages;
+  } else {
+    startPage = Math.max(1, portfolioCurrentPage - 2);
+    endPage = Math.min(totalPages, startPage + maxVisible - 3);
+    if (endPage - startPage < maxVisible - 3) {
+      startPage = Math.max(1, endPage - maxVisible + 3);
+    }
   }
-  if (next) {
-    next.style.visibility = portfolioCurrentPage >= totalPages ? 'hidden' : '';
-    next.style.cursor = portfolioCurrentPage >= totalPages ? 'default' : 'pointer';
+
+  if (portfolioCurrentPage > 1) {
+    html += '<li><button onclick="changePortfolioPage(' + (portfolioCurrentPage - 1) + ')" aria-label="Previous page">&lsaquo;</button></li>';
   }
+
+  if (startPage > 1) {
+    html += '<li><button onclick="changePortfolioPage(1)">1</button></li>';
+    if (startPage > 2) {
+      html += '<li class="scut-pagination-ellipsis">&hellip;</li>';
+    }
+  }
+
+  for (var p = startPage; p <= endPage; p++) {
+    if (p === portfolioCurrentPage) {
+      html += '<li><button class="scut-pagination-current" disabled>' + p + '</button></li>';
+    } else {
+      html += '<li><button onclick="changePortfolioPage(' + p + ')">' + p + '</button></li>';
+    }
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      html += '<li class="scut-pagination-ellipsis">&hellip;</li>';
+    }
+    html += '<li><button onclick="changePortfolioPage(' + totalPages + ')">' + totalPages + '</button></li>';
+  }
+
+  if (portfolioCurrentPage < totalPages) {
+    html += '<li><button onclick="changePortfolioPage(' + (portfolioCurrentPage + 1) + ')" aria-label="Next page">&rsaquo;</button></li>';
+  }
+
+  html += '</ul>';
+  nav.innerHTML = html;
 }
 
 function changePortfolioPage(delta) {
@@ -143,4 +202,3 @@ document.addEventListener('DOMContentLoaded', function() {
   initPortfolioPagination();
 });
 </script>
-
