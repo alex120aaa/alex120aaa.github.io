@@ -7,12 +7,9 @@
   margin-bottom: 1em;
 
   @media screen and (min-width: $sidebar-screen-min-width) {
-    height: auto;
-    overflow-y: visible;
-    position: static;
-    padding-top: 0;
+    height: 100%;
+    overflow: visible;
     @include span(4 of 12);
-    opacity: 1;
   }
 
   @include breakpoint($x-large) {
@@ -44,18 +41,20 @@
 
 .scut-sidebar {
   @media screen and (min-width: $sidebar-screen-min-width) {
-    position: sticky;
-    top: 140px;
+    height: 100%;
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
   }
 
   @media screen and (max-width: $sidebar-screen-min-width - 1px) {
-    position: static;
     width: 100%;
     max-width: none;
+    height: auto;
+    padding: 20px 16px;
   }
 }
 
@@ -68,6 +67,11 @@
   border-radius: 8px;
   padding: 0;
   overflow: hidden;
+
+  @media screen and (min-width: $sidebar-screen-min-width) {
+    position: sticky;
+    top: 140px;
+  }
 }
 
 .scut-profile-avatar {
