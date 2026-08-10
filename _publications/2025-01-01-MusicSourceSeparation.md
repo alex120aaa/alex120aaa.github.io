@@ -1,11 +1,11 @@
 ---
-title: "Music Source Separation via Hybrid Waveform and Spectrogram Based Generative Adversarial Network"
+title: "Music source separation via hybrid waveform and spectrogram based generative adversarial network"
 collection: publications
 category: manuscripts
-permalink: /publication/2025-MusicSourceSeparation
+permalink: /publication/MusicSourceSeparation
 excerpt: 'A hybrid waveform and spectrogram based GAN for music source separation.'
 date: 2025-01-01
 venue: 'Multimedia Tools and Applications'
-paperurl: 'https://openreview.net/forum?id=zJ12CMMT2q'
-citation: 'Wu, Q., Deng, H., Hu, K., &amp; Wang, Z. (2025). &quot;Music source separation via hybrid waveform and spectrogram based generative adversarial network.&quot; <i>Multimedia Tools and Applications</i>.'
+paperurl: 'https://doi.org/10.1007/S11042-024-20038-9'
+citation: 'Wu, Q., et al. (2025). &quot;Music source separation via hybrid waveform and spectrogram based generative adversarial network&quot; <i>Multimedia Tools and Applications</i>.'
 ---
