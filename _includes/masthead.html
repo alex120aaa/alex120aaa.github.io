@@ -18,6 +18,8 @@
   <div class="scut-nav-bar">
     <div class="scut-nav-inner">
       <nav id="site-nav" class="scut-nav">
+        <div class="scut-nav-spacer" aria-hidden="true"></div>
+        <div class="scut-nav-content">
         <ul class="visible-links">
           {% for link in site.data.navigation.main %}
             {% if link.url contains 'http' %}
@@ -54,6 +56,7 @@
             {% endif %}
           {% endfor %}
         </ul>
+        </div>
       </nav>
     </div>
   </div>
