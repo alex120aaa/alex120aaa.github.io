@@ -23,7 +23,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   @media (min-width: 1024px) {
-    padding-top: $masthead-height !important;
+    /* SCUT masthead = black top bar (~60px) + blue nav bar (~67px) = ~127px.
+       Use 130px to ensure the fixed masthead never covers the content frames. */
+    padding-top: 130px !important;
   }
 
   &.overflow--hidden {

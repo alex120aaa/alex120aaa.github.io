@@ -20,6 +20,9 @@
     display: flex;
     gap: 32px;
     align-items: stretch;
+    /* SCUT: extra top padding so white frames sit comfortably below
+       the 130px body padding that compensates for the fixed masthead */
+    padding-top: 32px;
 
     .sidebar,
     .archive,
