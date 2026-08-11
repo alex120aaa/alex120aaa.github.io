@@ -1,11 +1,15 @@
 ---
 layout: archive
-title: "Research Projects & Activities"
+title: "Research-Based Degree Supervision"
 permalink: /research-projects/
 author_profile: true
 ---
 
 {% include base_path %}
+
+<p class="scut-sample-notice">
+  更多指导学生信息待补充 / More supervision information to be added.
+</p>
 
 <div class="scut-publications-controls">
   <div class="scut-sort-by">
@@ -196,7 +200,7 @@ function sortProjects(sortBy) {
     } else if (sortBy === 'title-desc') {
       return (b.getAttribute('data-title') || '').toLowerCase().localeCompare((a.getAttribute('data-title') || '').toLowerCase());
     } else if (sortBy === 'type') {
-      var typeOrder = { 'RESEARCH PROJECT': 1, 'RESEARCH ACTIVITY': 2 };
+      var typeOrder = { 'RESEARCH-BASED DEGREE SUPERVISION': 1, 'RESEARCH PROJECT': 2, 'RESEARCH ACTIVITY': 3 };
       var typeA = a.querySelector('.scut-publication-type');
       var typeB = b.querySelector('.scut-publication-type');
       var ta = typeA ? typeOrder[typeA.textContent.trim()] || 9 : 9;

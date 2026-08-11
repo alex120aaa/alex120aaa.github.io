@@ -24,10 +24,16 @@
   </h2>
 
   <div class="scut-publication-meta">
-    {% if post.funder %}
-    <span class="scut-grant-funder">{{ post.funder }}</span>
+    {% if post.student %}
+    <span class="scut-grant-funder">{{ post.student }}</span>
     {% endif %}
-    {% if post.funder and post.date %}
+    {% if post.student and post.degree %}
+    <span class="scut-grant-diamond">◆</span>
+    {% endif %}
+    {% if post.degree %}
+    <span class="scut-grant-funder">{{ post.degree }}</span>
+    {% endif %}
+    {% if post.degree and post.date %}
     <span class="scut-grant-diamond">◆</span>
     {% endif %}
     {% if post.date %}
@@ -38,6 +44,15 @@
       <span class="scut-pub-date">{{ post.date_end | date: '%b %Y' }}</span>
     {% endif %}
   </div>
+
+  {% if post.program %}
+  <div class="scut-grant-investigators">
+    <span class="scut-grant-investigators-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+    </span>
+    <span class="scut-grant-investigators-text">{{ post.program }}</span>
+  </div>
+  {% endif %}
 
   {% if post.excerpt %}
   <div class="scut-publication-abstract">
