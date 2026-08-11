@@ -14,7 +14,9 @@
 
 <div class="scut-publication-card" data-date="{{ post.date | default: '1900-01-01' | date: '%Y-%m-%d' }}" data-title="{{ title | strip_html }}">
   <div class="scut-publication-type">
-    {% if post.category == 'conferences' %}
+    {% if post.collection == 'teaching' %}
+      {{ post.type | default: 'COURSE' | upcase }}
+    {% elsif post.category == 'conferences' %}
       CONFERENCE PAPER
     {% elsif post.category == 'books' %}
       BOOK
