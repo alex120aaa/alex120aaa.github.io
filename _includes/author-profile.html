@@ -23,7 +23,7 @@
     {% if author.orcid %}
     <div class="scut-profile-orcid">
       <img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" alt="ORCID" width="16" height="16">
-      <a href="{{ author.orcid }}" target="_blank" rel="noopener">ORCID iD</a>
+      <a href="{{ author.orcid }}" target="_blank" rel="noopener">{{ author.orcid | split: "/" | last }}</a>
     </div>
     {% endif %}
 
