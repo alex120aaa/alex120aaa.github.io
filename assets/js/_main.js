@@ -139,6 +139,25 @@ function redrawPlotly() {
    ========================================================================== */
 
 $(document).ready(function () {
+  // SCUT fix: neutralise any masthead-driven inline padding on the sidebar
+  // (greedy-navigation used to add padding-top equal to masthead height,
+  // which caused the top of the white sidebar frame to be "covered").
+  // Run this both on load and shortly after to defeat any late-acting code.
+  var scutFixSidebarPadding = function () {
+    $("body").css("paddingTop", "");
+    $(".sidebar").css("paddingTop", "").removeAttr("style");
+    // Also ensure the scut-sidebar frame retains its CSS padding
+    var w = $(window).width();
+    if (w >= 1024) {
+      $(".scut-sidebar").css("paddingTop", "24px");
+    } else {
+      $(".scut-sidebar").css("paddingTop", "");
+    }
+  };
+  scutFixSidebarPadding();
+  $(window).on("resize orientationchange", scutFixSidebarPadding);
+  // Safety net in case another script re-applies the padding later
+  setInterval(scutFixSidebarPadding, 200);
   // SCSS SETTINGS - These should be the same as the settings in the relevant files
   const scssLarge = 925;          // pixels, from /_sass/_themes.scss
   const scssMastheadHeight = 70;  // pixels, from the current theme (e.g., /_sass/theme/_default.scss)

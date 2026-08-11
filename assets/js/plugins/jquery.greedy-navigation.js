@@ -58,14 +58,12 @@ function updateNav() {
   // Keep counter updated
   $btn.attr("count", breaks.length);
 
-  // update masthead height and the body/sidebar top padding
-  var mastheadHeight = $('.masthead').height();
-  $('body').css('padding-top', mastheadHeight + 'px');
-  if ($(".author__urls-wrapper button").is(":visible")) {
-    $(".sidebar").css("padding-top", "");
-  } else {
-    $(".sidebar").css("padding-top", mastheadHeight + "px");
-  }
+  // SCUT fix: do NOT apply inline padding-top to body or sidebar.
+  // Layout spacing is handled by CSS (_base.scss / _page.scss / _sidebar.scss).
+  // Also neutralise any previously-applied inline padding so cached old
+  // versions of the script cannot pollute the layout.
+  $('body').css('padding-top', '');
+  $(".sidebar").css("paddingTop", "").removeAttr("style");
 
 }
 

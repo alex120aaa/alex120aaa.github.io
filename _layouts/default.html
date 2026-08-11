@@ -1,31 +1,39 @@
----
-layout: compress
----
-
-{% include base_path %}
-
-<!doctype html>
-<html lang="{{ site.locale | slice: 0,2 }}" class="no-js"{% if site.site_theme == "dark" %} data-theme="dark"{% endif %}>
-  <head>
-    {% include head.html %}
-    {% include head/custom.html %}
-  </head>
-
-  <body class="scut-body">
-
+{% include head.html %}
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     {% include browser-upgrade.html %}
     {% include masthead.html %}
-
-    {{ content }}
-
-    <div class="page__footer">
-      <footer>
-        {% include footer/custom.html %}
-        {% include footer.html %}
-      </footer>
+    <div id="main" class="page__site">
+      <div id="content" class="page__content">
+        {{ content }}
+      </div>
     </div>
-
-    {% include scripts.html %}
-
+    {% include page__footer.html %}
+    <script>
+      // SCUT fix: neutralise any masthead-driven inline padding on the sidebar.
+      // Run immediately so it beats any subsequent JS (greedy-navigation, theme.js, etc).
+      (function () {
+        function scutCleanup() {
+          if (window.jQuery) {
+            jQuery("body").css("paddingTop", "").css("paddingBottom", "");
+            jQuery(".sidebar").removeAttr("style");
+          } else {
+            document.body.style.paddingTop = "";
+            var sb = document.querySelector(".sidebar");
+            if (sb) sb.removeAttribute("style");
+          }
+        }
+        scutCleanup();
+        if (document.addEventListener) {
+          document.addEventListener("DOMContentLoaded", scutCleanup);
+          window.addEventListener("load", scutCleanup);
+          window.addEventListener("resize", scutCleanup);
+          setInterval(scutCleanup, 200);
+        }
+      })();
+    </script>
+    <script type="module" src="{{ base_path }}/assets/js/main.min.js?v=2"></script>
+    {% include analytics.html %}
+    {% include comments-providers/scripts.html %}
   </body>
 </html>

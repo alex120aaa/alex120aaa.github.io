@@ -43,8 +43,13 @@
   @media (min-width: $sidebar-screen-min-width) {
     .sidebar.sticky,
     .sidebar .sticky {
-      position: static;
-      top: auto;
+      position: static !important;
+      top: auto !important;
+    }
+
+    /* Ensure sidebar gets no JS-added padding-top */
+    .scut-sidebar {
+      padding-top: 24px !important;
     }
   }
 }
