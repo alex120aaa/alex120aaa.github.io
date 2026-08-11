@@ -7,13 +7,6 @@ author_profile: true
 
 {% include base_path %}
 
-<div class="scut-sample-notice">
-  <span class="scut-sample-notice-icon" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-  </span>
-  <span class="scut-sample-notice-text"><strong>示例数据</strong>：课程名称已核实（数字逻辑、图像处理基础），但课程详细大纲内容为示例，正式发布前需替换为真实课程信息。</span>
-</div>
-
 {% for post in site.teaching reversed %}
   {% include archive-single.html %}
 {% endfor %}
