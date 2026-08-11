@@ -24,8 +24,18 @@
   </h2>
 
   <div class="scut-publication-meta">
+    {% if post.funder %}
+    <span class="scut-grant-funder">{{ post.funder }}</span>
+    {% endif %}
+    {% if post.funder and post.date %}
+    <span class="scut-grant-diamond">◆</span>
+    {% endif %}
     {% if post.date %}
       <span class="scut-pub-date">{{ post.date | default: '1900-01-01' | date: '%b %Y' }}</span>
+    {% endif %}
+    {% if post.date_end %}
+      <span class="scut-grant-sep">–</span>
+      <span class="scut-pub-date">{{ post.date_end | date: '%b %Y' }}</span>
     {% endif %}
   </div>
 
