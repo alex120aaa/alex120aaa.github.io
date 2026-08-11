@@ -19,7 +19,7 @@ author_profile: true
     </select>
   </div>
   <div class="scut-search-results">
-    <input type="text" id="projectSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchProjects(this.value)">
+    <input type="text" id="projectSearch" class="scut-publication-search" placeholder="Search by title..." oninput="searchProjectsDebounced(this.value)">
   </div>
 </div>
 
@@ -37,6 +37,24 @@ author_profile: true
 var projItemsPerPage = 25;
 var projCurrentPage = 1;
 var projFilteredItems = [];
+var projSearchTimer = null;
+
+function searchProjectsDebounced(query) {
+  var input = document.getElementById('projectSearch');
+  if (input) {
+    input.classList.add('scut-searching');
+    input.classList.remove('scut-search-done');
+  }
+  if (projSearchTimer) clearTimeout(projSearchTimer);
+  projSearchTimer = setTimeout(function() {
+    searchProjects(query);
+    if (input) {
+      input.classList.remove('scut-searching');
+      input.classList.add('scut-search-done');
+      setTimeout(function() { input.classList.remove('scut-search-done'); }, 800);
+    }
+  }, 200);
+}
 
 function initProjectsPagination() {
   var container = document.getElementById('projectsContainer');
@@ -141,19 +159,25 @@ function changeProjPage(page) {
 }
 
 function searchProjects(query) {
-  query = query.toLowerCase();
+  query = (query || '').toLowerCase().trim();
   var container = document.getElementById('projectsContainer');
   if (!container) return;
   var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
-  var filtered = [];
-  allItems.forEach(function(item) {
-    var title = item.querySelector('.scut-publication-title');
-    if (title) {
-      var text = title.textContent.toLowerCase();
-      if (text.includes(query)) filtered.push(item);
-    }
-  });
-  projFilteredItems = filtered;
+
+  if (!query) {
+    projFilteredItems = allItems;
+  } else {
+    var filtered = [];
+    allItems.forEach(function(item) {
+      var title = item.querySelector('.scut-publication-title');
+      var abstract = item.querySelector('.scut-abstract-text');
+      var text = '';
+      if (title) text += title.textContent + ' ';
+      if (abstract) text += abstract.textContent;
+      if (text.toLowerCase().includes(query)) filtered.push(item);
+    });
+    projFilteredItems = filtered;
+  }
   projCurrentPage = 1;
   renderProjects();
 }
@@ -183,18 +207,33 @@ function sortProjects(sortBy) {
     return 0;
   });
   allItems.forEach(function(item) { container.appendChild(item); });
-  projFilteredItems = allItems.filter(function(item) {
-    var title = item.querySelector('.scut-publication-title');
-    if (!title) return false;
-    var search = document.getElementById('projectSearch');
-    if (!search || !search.value) return true;
-    return title.textContent.toLowerCase().includes(search.value.toLowerCase());
-  });
-  projCurrentPage = 1;
-  renderProjects();
+
+  var search = document.getElementById('projectSearch');
+  var searchVal = search ? search.value : '';
+  if (searchVal) {
+    searchProjects(searchVal);
+  } else {
+    projFilteredItems = allItems;
+    projCurrentPage = 1;
+    renderProjects();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   initProjectsPagination();
+
+  var searchInput = document.getElementById('projectSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      searchProjectsDebounced(this.value);
+    });
+    searchInput.addEventListener('keyup', function() {
+      searchProjectsDebounced(this.value);
+    });
+    searchInput.addEventListener('paste', function() {
+      var self = this;
+      setTimeout(function() { searchProjects(self.value); }, 0);
+    });
+  }
 });
 </script>

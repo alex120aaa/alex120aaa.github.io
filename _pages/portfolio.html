@@ -31,7 +31,7 @@ author_profile: true
           </select>
         </div>
         <div class="scut-search-results">
-          <input type="text" id="portfolioSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchPortfolio(this.value)">
+          <input type="text" id="portfolioSearch" class="scut-publication-search" placeholder="Search by title..." oninput="searchPortfolioDebounced(this.value)">
         </div>
       </div>
 
@@ -52,6 +52,24 @@ author_profile: true
 var portfolioItemsPerPage = 10;
 var portfolioCurrentPage = 1;
 var portfolioFilteredItems = [];
+var portfolioSearchTimer = null;
+
+function searchPortfolioDebounced(query) {
+  var input = document.getElementById('portfolioSearch');
+  if (input) {
+    input.classList.add('scut-searching');
+    input.classList.remove('scut-search-done');
+  }
+  if (portfolioSearchTimer) clearTimeout(portfolioSearchTimer);
+  portfolioSearchTimer = setTimeout(function() {
+    searchPortfolio(query);
+    if (input) {
+      input.classList.remove('scut-searching');
+      input.classList.add('scut-search-done');
+      setTimeout(function() { input.classList.remove('scut-search-done'); }, 800);
+    }
+  }, 200);
+}
 
 function initPortfolioPagination() {
   var container = document.getElementById('portfolioContainer');
@@ -153,21 +171,25 @@ function changePortfolioPage(delta) {
 }
 
 function searchPortfolio(query) {
-  query = query.toLowerCase();
+  query = (query || '').toLowerCase().trim();
   var container = document.getElementById('portfolioContainer');
   if (!container) return;
   var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
-  var filtered = [];
-  allItems.forEach(function(item) {
-    var title = item.querySelector('.scut-publication-title');
-    if (title) {
-      var text = title.textContent.toLowerCase();
-      var matches = text.includes(query);
-      item._portfolioMatch = matches;
-      if (matches) filtered.push(item);
-    }
-  });
-  portfolioFilteredItems = filtered;
+
+  if (!query) {
+    portfolioFilteredItems = allItems;
+  } else {
+    var filtered = [];
+    allItems.forEach(function(item) {
+      var title = item.querySelector('.scut-publication-title');
+      var abstract = item.querySelector('.scut-abstract-text');
+      var text = '';
+      if (title) text += title.textContent + ' ';
+      if (abstract) text += abstract.textContent;
+      if (text.toLowerCase().includes(query)) filtered.push(item);
+    });
+    portfolioFilteredItems = filtered;
+  }
   portfolioCurrentPage = 1;
   renderPortfolio();
 }
@@ -175,8 +197,8 @@ function searchPortfolio(query) {
 function sortPortfolio(sortBy) {
   var container = document.getElementById('portfolioContainer');
   if (!container) return;
-  var items = portfolioFilteredItems;
-  items.sort(function(a, b) {
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  allItems.sort(function(a, b) {
     if (sortBy === 'date-desc') {
       var dateA = a.getAttribute('data-date') || '';
       var dateB = b.getAttribute('data-date') || '';
@@ -194,15 +216,36 @@ function sortPortfolio(sortBy) {
   });
 
   var parent = container;
-  items.forEach(function(item) {
+  allItems.forEach(function(item) {
     parent.appendChild(item);
   });
 
-  portfolioCurrentPage = 1;
-  renderPortfolio();
+  var search = document.getElementById('portfolioSearch');
+  var searchVal = search ? search.value : '';
+  if (searchVal) {
+    searchPortfolio(searchVal);
+  } else {
+    portfolioFilteredItems = allItems;
+    portfolioCurrentPage = 1;
+    renderPortfolio();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   initPortfolioPagination();
+
+  var searchInput = document.getElementById('portfolioSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      searchPortfolioDebounced(this.value);
+    });
+    searchInput.addEventListener('keyup', function() {
+      searchPortfolioDebounced(this.value);
+    });
+    searchInput.addEventListener('paste', function() {
+      var self = this;
+      setTimeout(function() { searchPortfolio(self.value); }, 0);
+    });
+  }
 });
 </script>

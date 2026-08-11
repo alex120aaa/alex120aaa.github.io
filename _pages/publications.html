@@ -19,7 +19,7 @@ author_profile: true
     </select>
   </div>
   <div class="scut-search-results">
-    <input type="text" id="publicationSearch" class="scut-publication-search" placeholder="Search by title..." onkeyup="searchPublications(this.value)">
+    <input type="text" id="publicationSearch" class="scut-publication-search" placeholder="Search by title..." oninput="searchPublicationsDebounced(this.value)">
   </div>
 </div>
 
@@ -37,6 +37,24 @@ author_profile: true
 var pubItemsPerPage = 25;
 var pubCurrentPage = 1;
 var pubFilteredItems = [];
+var pubSearchTimer = null;
+
+function searchPublicationsDebounced(query) {
+  var input = document.getElementById('publicationSearch');
+  if (input) {
+    input.classList.add('scut-searching');
+    input.classList.remove('scut-search-done');
+  }
+  if (pubSearchTimer) clearTimeout(pubSearchTimer);
+  pubSearchTimer = setTimeout(function() {
+    searchPublications(query);
+    if (input) {
+      input.classList.remove('scut-searching');
+      input.classList.add('scut-search-done');
+      setTimeout(function() { input.classList.remove('scut-search-done'); }, 800);
+    }
+  }, 200);
+}
 
 function initPublicationsPagination() {
   var container = document.getElementById('publicationsContainer');
@@ -141,19 +159,25 @@ function changePubPage(page) {
 }
 
 function searchPublications(query) {
-  query = query.toLowerCase();
+  query = (query || '').toLowerCase().trim();
   var container = document.getElementById('publicationsContainer');
   if (!container) return;
   var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
-  var filtered = [];
-  allItems.forEach(function(item) {
-    var title = item.querySelector('.scut-publication-title');
-    if (title) {
-      var text = title.textContent.toLowerCase();
-      if (text.includes(query)) filtered.push(item);
-    }
-  });
-  pubFilteredItems = filtered;
+
+  if (!query) {
+    pubFilteredItems = allItems;
+  } else {
+    var filtered = [];
+    allItems.forEach(function(item) {
+      var title = item.querySelector('.scut-publication-title');
+      var abstract = item.querySelector('.scut-abstract-text');
+      var text = '';
+      if (title) text += title.textContent + ' ';
+      if (abstract) text += abstract.textContent;
+      if (text.toLowerCase().includes(query)) filtered.push(item);
+    });
+    pubFilteredItems = filtered;
+  }
   pubCurrentPage = 1;
   renderPublications();
 }
@@ -183,18 +207,33 @@ function sortPublications(sortBy) {
     return 0;
   });
   allItems.forEach(function(item) { container.appendChild(item); });
-  pubFilteredItems = allItems.filter(function(item) {
-    var title = item.querySelector('.scut-publication-title');
-    if (!title) return false;
-    var search = document.getElementById('publicationSearch');
-    if (!search || !search.value) return true;
-    return title.textContent.toLowerCase().includes(search.value.toLowerCase());
-  });
-  pubCurrentPage = 1;
-  renderPublications();
+
+  var search = document.getElementById('publicationSearch');
+  var searchVal = search ? search.value : '';
+  if (searchVal) {
+    searchPublications(searchVal);
+  } else {
+    pubFilteredItems = allItems;
+    pubCurrentPage = 1;
+    renderPublications();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   initPublicationsPagination();
+
+  var searchInput = document.getElementById('publicationSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      searchPublicationsDebounced(this.value);
+    });
+    searchInput.addEventListener('keyup', function() {
+      searchPublicationsDebounced(this.value);
+    });
+    searchInput.addEventListener('paste', function() {
+      var self = this;
+      setTimeout(function() { searchPublications(self.value); }, 0);
+    });
+  }
 });
 </script>

@@ -323,6 +323,7 @@
   font-size: 13px;
   background-color: #ffffff;
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:focus {
     border-color: #004098;
@@ -332,6 +333,15 @@
   &::placeholder {
     color: #9ca3af;
   }
+}
+
+.scut-publication-search.scut-searching {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.scut-publication-search.scut-search-done {
+  border-color: #10b981;
 }
 
 /* ==========================================================================
