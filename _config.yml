@@ -9,10 +9,10 @@
 # Basic Site Settings
 locale                   : "en-US"
 site_theme               : "default" # The available themes options are "default", "air", "sunrise", "mint", "dirt" and "contrast"
-title                    : "吴秋霞/ 副教授"
-title_separator          : "-"
-name                     : &name "吴秋霞"
-description              : &description "吴秋霞副教授的个人学术主页"   # Update this with a general description of your site, this is the default if not overridden by a page
+title                    : "Qiuxia Wu | Associate Professor"
+title_separator          : "|"
+name                     : &name "Qiuxia Wu"
+description              : &description "Personal academic homepage of Qiuxia Wu, Associate Professor at South China University of Technology"
 url                      : https://alex120aaa.github.io # The base hostname & protocol for your site e.g. "https://[your GitHub username].github.io",
                                                            # or if you already have some other page hosted on Github then use "https://[your GitHub username].github.io/[Your Repo Name]"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
@@ -24,9 +24,9 @@ repository               : "alex120aaa/alex120aaa.github.io"
 author:
   # Biographic information
   avatar           : "profile.png"
-  name             : "吴秋霞"
+  name             : "Qiuxia Wu"
   pronouns         : "she/her"  
-  bio              : "Associate Professor, School of Software Engineering, SCUT"
+  bio              : "Associate Professor, School of Software Engineering"
   location         : "Guangzhou, China"
   employer         : "South China University of Technology"
   uri              : # URL
