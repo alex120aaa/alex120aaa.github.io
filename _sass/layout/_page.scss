@@ -463,7 +463,73 @@
 }
 
 /* ==========================================================================
-   SCUT Pagination
+   SCUT Grant Card (Portfolio / Funded Research)
+   ========================================================================== */
+
+.scut-grant-card {
+  padding: 20px 24px;
+}
+
+.scut-grant-type {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.scut-grant-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 10px 0;
+  line-height: 1.35;
+}
+
+.scut-grant-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.scut-grant-funder {
+  font-style: italic;
+  color: #374151;
+}
+
+.scut-grant-diamond {
+  color: #9ca3af;
+  font-size: 10px;
+}
+
+.scut-grant-sep {
+  color: #6b7280;
+  margin: 0 2px;
+}
+
+.scut-grant-investigators {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.scut-grant-investigators-icon {
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+}
+
+.scut-grant-investigators-text {
+  font-weight: 500;
+  color: #374151;
+}
+
+/* ==========================================================================
+   SCUT Pagination (Sydney-style)
    ========================================================================== */
 
 .scut-pagination {

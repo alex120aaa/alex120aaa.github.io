@@ -37,7 +37,7 @@ author_profile: true
 
       <div class="scut-publications-container" id="portfolioContainer">
         {% for post in site.portfolio %}
-          {% include archive-single.html %}
+          {% include archive-single-portfolio.html %}
         {% endfor %}
       </div>
 
@@ -181,11 +181,13 @@ function searchPortfolio(query) {
   } else {
     var filtered = [];
     allItems.forEach(function(item) {
-      var title = item.querySelector('.scut-publication-title');
-      var abstract = item.querySelector('.scut-abstract-text');
+      var title = item.querySelector('.scut-grant-title');
+      var funder = item.querySelector('.scut-grant-funder');
+      var investigators = item.querySelector('.scut-grant-investigators-text');
       var text = '';
       if (title) text += title.textContent + ' ';
-      if (abstract) text += abstract.textContent;
+      if (funder) text += funder.textContent + ' ';
+      if (investigators) text += investigators.textContent;
       if (text.toLowerCase().includes(query)) filtered.push(item);
     });
     portfolioFilteredItems = filtered;
