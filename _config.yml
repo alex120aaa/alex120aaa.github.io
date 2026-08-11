@@ -23,7 +23,7 @@ repository               : "alex120aaa/alex120aaa.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "profile.jpg"
   name             : "Qiuxia Wu"
   pronouns         : "she/her"  
   bio              : "Associate Professor, School of Software Engineering"
