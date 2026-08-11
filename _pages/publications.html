@@ -50,6 +50,10 @@ function initPublicationsPagination() {
 function renderPublications() {
   var container = document.getElementById('publicationsContainer');
   if (!container) return;
+
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  allItems.forEach(function(item) { item.style.display = 'none'; });
+
   var items = pubFilteredItems;
   var total = items.length;
   var totalPages = Math.max(1, Math.ceil(total / pubItemsPerPage));

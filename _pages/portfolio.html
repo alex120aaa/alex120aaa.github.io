@@ -65,6 +65,10 @@ function initPortfolioPagination() {
 function renderPortfolio() {
   var container = document.getElementById('portfolioContainer');
   if (!container) return;
+
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  allItems.forEach(function(item) { item.style.display = 'none'; });
+
   var items = portfolioFilteredItems;
   var total = items.length;
   var totalPages = Math.max(1, Math.ceil(total / portfolioItemsPerPage));

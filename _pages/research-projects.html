@@ -50,6 +50,10 @@ function initProjectsPagination() {
 function renderProjects() {
   var container = document.getElementById('projectsContainer');
   if (!container) return;
+
+  var allItems = Array.from(container.querySelectorAll('.scut-publication-card'));
+  allItems.forEach(function(item) { item.style.display = 'none'; });
+
   var items = projFilteredItems;
   var total = items.length;
   var totalPages = Math.max(1, Math.ceil(total / projItemsPerPage));
