@@ -889,9 +889,9 @@
 
   .scut-page .page__inner-wrap,
   .scut-archive .page__inner-wrap {
-    height: auto;
-    float: none;
-    overflow: hidden;
+    height: auto !important;
+    float: none !important;
+    overflow: hidden !important;
   }
 
   .scut-page .page__inner-wrap .page__content,
@@ -900,8 +900,8 @@
   .scut-archive .page__inner-wrap .page__content,
   .scut-archive .page__inner-wrap .page__meta,
   .scut-archive .page__inner-wrap .page__share {
-    float: none;
-    width: auto;
+    float: none !important;
+    width: auto !important;
   }
 
   .scut-page .page__title,
