@@ -868,8 +868,7 @@
 
 @media (max-width: 1024px) {
   #main {
-    flex-direction: column;
-    gap: 24px;
+    padding-top: 20px;
   }
 
   .sidebar {
@@ -879,11 +878,18 @@
   .scut-sidebar {
     position: static;
     padding: 20px 16px;
+    margin-bottom: 20px;
   }
 
   .scut-archive,
   .scut-page {
     padding: 20px 16px;
+    margin-top: 0;
+  }
+
+  .scut-page .page__inner-wrap,
+  .scut-archive .page__inner-wrap {
+    height: auto;
   }
 
   .scut-page .page__title,
