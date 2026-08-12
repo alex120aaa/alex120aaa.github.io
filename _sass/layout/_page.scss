@@ -890,6 +890,18 @@
   .scut-page .page__inner-wrap,
   .scut-archive .page__inner-wrap {
     height: auto;
+    float: none;
+    overflow: hidden;
+  }
+
+  .scut-page .page__inner-wrap .page__content,
+  .scut-page .page__inner-wrap .page__meta,
+  .scut-page .page__inner-wrap .page__share,
+  .scut-archive .page__inner-wrap .page__content,
+  .scut-archive .page__inner-wrap .page__meta,
+  .scut-archive .page__inner-wrap .page__share {
+    float: none;
+    width: auto;
   }
 
   .scut-page .page__title,
