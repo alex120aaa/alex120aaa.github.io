@@ -45,12 +45,17 @@
     {% endif %}
   </div>
 
-  {% if post.excerpt %}
+  {% assign body_text = post.content | strip_html | strip_newlines | strip %}
+  {% if body_text.size > 10 %}
   <div class="scut-publication-abstract">
-    <p class="scut-abstract-text">{{ post.excerpt | markdownify | strip_html | truncate: 300 }}</p>
-    {% if post.excerpt | strip_html | size > 300 %}
+    <p class="scut-abstract-text">{{ post.content | strip_html | truncate: 300 }}</p>
+    {% if body_text.size > 300 %}
       <a href="{{ base_path }}{{ post.url }}" class="scut-see-more">see more</a>
     {% endif %}
+  </div>
+  {% elsif post.excerpt %}
+  <div class="scut-publication-abstract">
+    <p class="scut-abstract-text">{{ post.excerpt | strip_html | truncate: 300 }}</p>
   </div>
   {% endif %}
 </div>
